@@ -13,13 +13,22 @@
 <!-- ══ LOGIN ══════════════════════════════════════════════════ -->
 <div id="loginScreen">
   <div class="login-box">
-    <span class="flag">🌍</span>
-    <h1>Hattrick GEQ</h1>
-    <p>Selección Guinea Ecuatorial</p>
-    <input type="password" id="pwdInput" placeholder="Contraseña"
-           onkeydown="if(event.key==='Enter')login()">
-    <button onclick="login()">Entrar</button>
-    <div id="loginErr">Contraseña incorrecta</div>
+    <div class="login-flag-ribbon" aria-hidden="true">
+      <span class="lf-blue"></span>
+      <span class="lf-green"></span>
+      <span class="lf-white"></span>
+      <span class="lf-red"></span>
+    </div>
+    <div class="login-content">
+      <div class="login-mark">GEQ</div>
+      <div class="login-eyebrow">Guinea Ecuatorial · Scouting</div>
+      <h1>Hattrick GEQ</h1>
+      <p>Base de talento nacional — Gen. 41</p>
+      <input type="password" id="pwdInput" placeholder="Contraseña"
+             onkeydown="if(event.key==='Enter')login()">
+      <button onclick="login()">Entrar</button>
+      <div id="loginErr">Contraseña incorrecta</div>
+    </div>
   </div>
 </div>
 

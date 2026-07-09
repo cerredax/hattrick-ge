@@ -10,26 +10,59 @@ body{font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:13px;background:var
 /* ── Login ─────────────────────────────────────────────────── */
 #loginScreen{
   display:flex;align-items:center;justify-content:center;min-height:100vh;
-  background:radial-gradient(ellipse at top,#e0eaff 0,var(--bg) 55%);
+  background:linear-gradient(155deg,#091c2e 0%,#0e3b1e 55%,#091c2e 100%);
+  position:relative;overflow:hidden;
+}
+#loginScreen::before{
+  content:'';position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(21,153,71,.18) 0%,transparent 70%);
+  top:-120px;right:-160px;pointer-events:none;
+}
+#loginScreen::after{
+  content:'';position:absolute;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.14) 0%,transparent 70%);
+  bottom:-100px;left:-120px;pointer-events:none;
 }
 .login-box{
-  background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  box-shadow:0 20px 50px rgba(15,23,42,.1);padding:40px 36px;width:340px;text-align:center;
+  background:#fff;border-radius:18px;width:360px;text-align:center;overflow:hidden;
+  position:relative;z-index:1;
+  box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05);
 }
-.login-box .flag{font-size:36px;display:block;margin-bottom:12px}
-.login-box h1{font-size:18px;font-weight:700;margin-bottom:4px}
-.login-box p{font-size:12px;color:var(--muted);margin-bottom:24px}
+.login-flag-ribbon{
+  display:grid;grid-template-columns:52px 1fr 1fr 1fr;height:9px;
+}
+.lf-blue{background:#2563eb;clip-path:polygon(0 0,100% 50%,0 100%)}
+.lf-green{background:#159947}
+.lf-white{background:#e8eff8}
+.lf-red{background:#d92332}
+.login-content{padding:34px 34px 30px}
+.login-mark{
+  background:linear-gradient(135deg,#159947,#0f766e);border-radius:12px;
+  color:#fff;display:inline-flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;height:52px;width:64px;letter-spacing:.08em;
+  margin-bottom:16px;box-shadow:0 10px 24px rgba(15,118,110,.32);
+}
+.login-eyebrow{
+  color:#0f766e;font-size:10px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.login-content h1{font-size:24px;font-weight:800;margin-bottom:6px;color:#172033}
+.login-content p{font-size:12px;color:var(--muted);margin-bottom:26px}
 .login-box input{
-  width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:9px;
-  font-size:14px;background:#fff;margin-bottom:12px;outline:none;text-align:center;letter-spacing:2px;
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  font-size:14px;background:#f8fafc;margin-bottom:12px;outline:none;
+  text-align:center;letter-spacing:3px;
 }
-.login-box input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.login-box input:focus{border-color:#159947;box-shadow:0 0 0 3px rgba(21,153,71,.14);background:#fff}
 .login-box button{
-  width:100%;padding:11px;background:var(--brand);color:#fff;border:none;border-radius:9px;
-  font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(37,99,235,.22);
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,#159947,#0f766e);
+  color:#fff;border:none;border-radius:10px;
+  font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.02em;
+  box-shadow:0 8px 20px rgba(15,118,110,.32);
 }
-.login-box button:hover{background:var(--brand-s)}
-#loginErr{color:var(--danger);font-size:12px;margin-top:10px;display:none}
+.login-box button:hover{background:linear-gradient(135deg,#0f8040,#0c6060)}
+#loginErr{color:var(--danger);font-size:12px;margin-top:12px;display:none}
 
 /* ── App shell ─────────────────────────────────────────────── */
 #app{display:none;flex-direction:column;height:100vh;overflow:hidden}
