@@ -44,12 +44,6 @@ function headerBarHtml(label, val, max) {
     + '</div>';
 }
 
-function espBadgeHtml(esp, extraClass) {
-  if (!esp) return '';
-  var key = ESP_CLASS[esp] || '';
-  return '<span class="' + (extraClass || 'esp-pill') + (key ? ' esp-' + key : '') + '">' + esc(esp) + '</span>';
-}
-
 // ── Modal jugador (ficha) ────────────────────────────────────────
 function openPlayerModal(id) {
   var j = jugadores.find(function(j) { return String(j.id) === String(id); });
@@ -84,7 +78,6 @@ function openPlayerModal(id) {
   }
   h +=   '</div>';
   h +=   '<div class="pm-actions">';
-  h +=     '<a class="pm-link" href="' + htUrl + '" target="_blank">Hattrick ↗</a>';
   h +=     '<button class="close-btn" onclick="closePlayerModal()">×</button>';
   h +=   '</div>';
   h += '</div>';
@@ -138,6 +131,12 @@ function openPlayerModal(id) {
 
   h += '</div>'; // pm-body-new
 
+  // Footer
+  h += '<div class="pm-footer">';
+  h +=   '<a class="pm-ht-btn" href="' + htUrl + '" target="_blank">Ver en Hattrick ↗</a>';
+  h +=   '<button class="pm-close-full" onclick="closePlayerModal()">Cerrar</button>';
+  h += '</div>';
+
   document.querySelector('#playerOverlay .player-modal').innerHTML = h;
   document.getElementById('playerOverlay').classList.add('open');
 }
@@ -166,7 +165,10 @@ function toggleAltaPanel() {
   if (m.classList.contains('open')) {
     closeAltaPanel();
   } else {
-    resetAltaForm();
+    var inner = document.getElementById('altaModalInner');
+    var tpl   = document.getElementById('tplAlta');
+    inner.innerHTML = '';
+    inner.appendChild(tpl.content.cloneNode(true));
     m.classList.add('open');
     document.getElementById('nNombre').focus();
   }
@@ -180,20 +182,18 @@ function closeAltaIfOutside(e) {
   if (e.target === document.getElementById('altaModal')) closeAltaPanel();
 }
 
+function showNewMsg(txt, cls) {
+  var el = document.getElementById('newMsg');
+  if (!el) return;
+  el.textContent = txt; el.className = 'msg ' + cls; el.style.display = 'block';
+}
+
 function resetAltaForm() {
-  ['nNombre','nId','nDueno','nTier','nNotas'].forEach(function(id) {
-    document.getElementById(id).value = '';
-  });
-  ['nPort','nDef','nJug','nLat','nPas','nAnot','nBp',
-   'nHtms','nHtms28','nTsi','nForma','nResistencia',
-   'nAnos','nDias','nLiderazgo','nExperiencia'].forEach(function(id) {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('nPosicion').value = '';
-  document.getElementById('nEsp').value      = '';
-  document.getElementById('nNivel').value    = '';
-  document.getElementById('nContacto').value = 'No';
-  document.getElementById('newMsg').style.display = 'none';
+  var inner = document.getElementById('altaModalInner');
+  var tpl   = document.getElementById('tplAlta');
+  inner.innerHTML = '';
+  inner.appendChild(tpl.content.cloneNode(true));
+  document.getElementById('nNombre').focus();
 }
 
 async function saveNewPlayer() {
@@ -234,11 +234,6 @@ async function saveNewPlayer() {
   showToast('✓ ' + nombre + ' añadido.');
   renderTabla();
   closeAltaPanel();
-}
-
-function showNewMsg(txt, cls) {
-  var el = document.getElementById('newMsg');
-  el.textContent = txt; el.className = 'msg ' + cls; el.style.display = 'block';
 }
 
 // ── Eliminar jugador ─────────────────────────────────────────────
