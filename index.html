@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -24,10 +24,14 @@
       <div class="login-eyebrow">Guinea Ecuatorial · Scouting</div>
       <h1>Hattrick GEQ</h1>
       <p>Base de talento nacional</p>
-      <input type="password" id="pwdInput" placeholder="Contraseña"
+      <input type="email" id="emailInput" placeholder="Usuario"
+             autocomplete="username" inputmode="email"
+             onkeydown="if(event.key==='Enter')document.getElementById('pwdInput').focus()">
+      <input type="password" id="pwdInput" placeholder="Contrase&ntilde;a"
+             autocomplete="current-password"
              onkeydown="if(event.key==='Enter')login()">
-      <button onclick="login()">Entrar</button>
-      <div id="loginErr">Contraseña incorrecta</div>
+      <button id="loginBtn" onclick="login()">Entrar</button>
+      <div id="loginErr">Acceso no valido</div>
     </div>
   </div>
 </div>
@@ -56,6 +60,7 @@
     <div class="geq-actions">
       <button class="btn-help" onclick="toggleHelp()" title="Ayuda y tutorial">?</button>
       <button class="btn-reload" onclick="cargarJugadores()">↻ Recargar</button>
+      <button class="btn-reload" onclick="logout()">Salir</button>
     </div>
   </header>
 
@@ -526,3 +531,7 @@ Especialidad Cabeceador
 <script src="js/hattrick-update.js"></script>
 </body>
 </html>
+
+
+
+

@@ -1,4 +1,4 @@
-// ── Click en cabecera de tabla ───────────────────────────────────
+﻿// ── Click en cabecera de tabla ───────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('thead').addEventListener('click', function(e) {
     var th = e.target.closest('th.sortable');
@@ -149,3 +149,4 @@ function actualizarCabecerasSort() {
     t.setAttribute('data-sort-rank', i + 1);
   });
 }
+

@@ -1,4 +1,4 @@
-// ── Parser texto Hattrick / Foxtrick ────────────────────────────
+﻿// ── Parser texto Hattrick / Foxtrick ────────────────────────────
 function wordToNum(w) {
   var s = (w || '').toLowerCase()
     .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íì]/g,'i')
@@ -183,3 +183,4 @@ function showImportMsg(txt, cls) {
   var el = document.getElementById('msgImport');
   el.textContent = txt; el.className = 'msg ' + cls; el.style.display = 'block';
 }
+

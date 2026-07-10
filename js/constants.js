@@ -1,4 +1,4 @@
-// ── Mapas de posición y especialidad ────────────────────────────
+﻿// ── Mapas de posición y especialidad ────────────────────────────
 var POS_CLASS = {
   'Portero':'Por','Delantero':'Del','Mediocentro':'MC',
   'Extremo':'Ext','Defensa Central':'DC','Defensa Lateral':'DL'
@@ -60,3 +60,4 @@ var SORT_COLS = [
   { val:'liderazgo',   label:'Liderazgo'   },
   { val:'experiencia', label:'Experiencia' },
 ];
+

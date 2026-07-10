@@ -1,4 +1,4 @@
-﻿// â”€â”€ Helpers de barras de habilidad â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+﻿// ── Helpers de barras de habilidad ──────────────────────────────
 function skillLevelClass(v) {
   if (!v || v <= 0) return 'lv-0';
   if (v <= 3)  return 'lv-1';
@@ -44,7 +44,13 @@ function headerBarHtml(label, val, max) {
     + '</div>';
 }
 
-// â”€â”€ Modal jugador (ficha) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function espBadgeHtml(esp, extraClass) {
+  if (!esp) return '';
+  var key = ESP_CLASS[esp] || '';
+  return '<span class="' + (extraClass || 'esp-pill') + (key ? ' esp-' + key : '') + '">' + esc(esp) + '</span>';
+}
+
+// ── Modal jugador (ficha) ────────────────────────────────────────
 function openPlayerModal(id) {
   var j = jugadores.find(function(j) { return String(j.id) === String(id); });
   if (!j) return;
@@ -56,7 +62,7 @@ function openPlayerModal(id) {
 
   var h = '';
 
-  // Header â€” nombre Â· esp Â· forma Â· resistencia agrupados
+  // Header — nombre · esp · forma · resistencia agrupados
   h += '<div class="pm-header">';
   h +=   '<div class="pm-title-block">';
   h +=     '<div class="pm-name-row">';
@@ -65,7 +71,7 @@ function openPlayerModal(id) {
   h += espBadgeHtml(j.esp, 'esp-pill');
   h +=     '</div>';
   var sub = [];
-  if (j.anos !== '' && j.anos != null) sub.push(j.anos + ' aÃ±os y ' + (j.dias || 0) + ' dÃ­as');
+  if (j.anos !== '' && j.anos != null) sub.push(j.anos + ' años y ' + (j.dias || 0) + ' días');
   if (j.dueno) sub.push('Club: <strong>' + esc(j.dueno) + '</strong>');
   if (sub.length) h += '<div class="pm-sub-row">' + sub.join(' &middot; ') + '</div>';
   var hasForma = j.forma !== '' && j.forma != null;
@@ -78,8 +84,8 @@ function openPlayerModal(id) {
   }
   h +=   '</div>';
   h +=   '<div class="pm-actions">';
-  h +=     '<a class="pm-link" href="' + htUrl + '" target="_blank">Hattrick â†—</a>';
-  h +=     '<button class="close-btn" onclick="closePlayerModal()">Ã—</button>';
+  h +=     '<a class="pm-link" href="' + htUrl + '" target="_blank">Hattrick ↗</a>';
+  h +=     '<button class="close-btn" onclick="closePlayerModal()">×</button>';
   h +=   '</div>';
   h += '</div>';
 
@@ -96,16 +102,16 @@ function openPlayerModal(id) {
   // Habilidades
   h += '<div class="pm-section-label">Habilidades</div>';
   h += '<div class="pm-skills-table">';
-  h += skillBarHtml('PorterÃ­a',     j.port);
+  h += skillBarHtml('Portería',     j.port);
   h += skillBarHtml('Defensa',      j.def);
   h += skillBarHtml('Jugadas',      j.jug);
   h += skillBarHtml('Lateral',      j.lat);
   h += skillBarHtml('Pases',        j.pas);
-  h += skillBarHtml('AnotaciÃ³n',    j.anot);
-  h += skillBarHtml('BalÃ³n parado', j.bp);
+  h += skillBarHtml('Anotación',    j.anot);
+  h += skillBarHtml('Balón parado', j.bp);
   h += '</div>';
 
-  // Perfil â€” liderazgo, experiencia, HTMS, HTMS28, portal
+  // Perfil — liderazgo, experiencia, HTMS, HTMS28, portal
   var perfil = [];
   if (j.liderazgo   !== '' && j.liderazgo   != null) perfil.push(['Liderazgo',   +j.liderazgo,   NIVEL_LABEL[+j.liderazgo]   || '']);
   if (j.experiencia !== '' && j.experiencia != null) perfil.push(['Experiencia', +j.experiencia, NIVEL_LABEL[+j.experiencia] || '']);
@@ -145,7 +151,7 @@ function closePlayerIfOutside(e) {
   if (e.target === document.getElementById('playerOverlay')) closePlayerModal();
 }
 
-// â”€â”€ Modal ayuda â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Modal ayuda ──────────────────────────────────────────────────
 function toggleHelp() {
   document.getElementById('helpModal').classList.toggle('open');
 }
@@ -154,7 +160,7 @@ function closeHelpIfOutside(e) {
   if (e.target === document.getElementById('helpModal')) toggleHelp();
 }
 
-// â”€â”€ Modal alta (nueva ficha) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Modal alta (nueva ficha) ─────────────────────────────────────
 function toggleAltaPanel() {
   var m = document.getElementById('altaModal');
   if (m.classList.contains('open')) {
@@ -225,7 +231,7 @@ async function saveNewPlayer() {
 
   jugadores.push(mapFromDb(row));
   jugadores.sort(function(a, b) { return a.nombre.localeCompare(b.nombre, 'es'); });
-  showToast('âœ“ ' + nombre + ' aÃ±adido.');
+  showToast('✓ ' + nombre + ' añadido.');
   renderTabla();
   closeAltaPanel();
 }
@@ -235,7 +241,8 @@ function showNewMsg(txt, cls) {
   el.textContent = txt; el.className = 'msg ' + cls; el.style.display = 'block';
 }
 
-// â”€â”€ Eliminar jugador â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Eliminar jugador ─────────────────────────────────────────────
 async function deletePlayer(id) {
-  alert('El borrado directo estÃ¡ desactivado para evitar pÃ©rdidas accidentales. Edita la ficha o marca el contacto/estado segÃºn corresponda.');
+  alert('El borrado directo está desactivado para evitar pérdidas accidentales. Edita la ficha o marca el contacto/estado según corresponda.');
 }
+

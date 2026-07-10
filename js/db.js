@@ -1,4 +1,4 @@
-// ── Carga desde Supabase ─────────────────────────────────────────
+﻿// ── Carga desde Supabase ─────────────────────────────────────────
 async function cargarJugadores() {
   document.getElementById('stats').textContent = 'Cargando...';
   mostrarSkeleton();
@@ -88,3 +88,4 @@ function mapToDb(j) {
     fecha_17000:        j.fecha17     || null,
   };
 }
+

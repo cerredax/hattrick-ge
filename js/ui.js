@@ -1,18 +1,88 @@
-// ── Login ────────────────────────────────────────────────────────
+﻿// ── Login ────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
-  if (sessionStorage.getItem('ht_auth') === '1') mostrarApp();
+  inicializarAuth();
 });
 
-function login() {
-  if (document.getElementById('pwdInput').value === APP_PASSWORD) {
-    sessionStorage.setItem('ht_auth', '1');
+async function inicializarAuth() {
+  var res = await client.auth.getSession();
+  if (res.data && res.data.session) {
     mostrarApp();
   } else {
-    document.getElementById('loginErr').style.display = 'block';
+    mostrarLogin();
   }
+
+  client.auth.onAuthStateChange(function(event, session) {
+    if (session) {
+      mostrarApp();
+    } else if (event === 'SIGNED_OUT') {
+      mostrarLogin();
+    }
+  });
+}
+
+async function login() {
+  var emailInput = document.getElementById('emailInput');
+  var input = document.getElementById('pwdInput');
+  var btn = document.getElementById('loginBtn');
+  var err = document.getElementById('loginErr');
+  var email = emailInput.value.trim();
+  var password = input.value;
+
+  err.style.display = 'none';
+  if (!email) {
+    err.textContent = 'Introduce el usuario';
+    err.style.display = 'block';
+    emailInput.focus();
+    return;
+  }
+  if (!password) {
+    err.textContent = 'Introduce la contrase\u00f1a';
+    err.style.display = 'block';
+    input.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+
+  var res = await client.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Entrar';
+
+  if (res.error) {
+    err.textContent = 'Acceso no valido';
+    err.style.display = 'block';
+    return;
+  }
+
+  input.value = '';
+  localStorage.setItem('ht_last_email', email);
+  mostrarApp();
+}
+
+async function logout() {
+  await client.auth.signOut();
+  jugadores = [];
+  editingId = null;
+  document.getElementById('tbody').innerHTML = '';
+  mostrarLogin();
+}
+
+function mostrarLogin() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  var emailInput = document.getElementById('emailInput');
+  var lastEmail = localStorage.getItem('ht_last_email') || '';
+  emailInput.value = lastEmail;
+  (lastEmail ? document.getElementById('pwdInput') : emailInput).focus();
 }
 
 function mostrarApp() {
+  if (document.getElementById('app').style.display === 'flex') return;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   cargarJugadores();
@@ -118,3 +188,4 @@ function mostrarSkeleton() {
   }
   document.getElementById('tbody').innerHTML = html;
 }
+

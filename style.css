@@ -51,7 +51,7 @@ body{font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:13px;background:var
 .login-box input{
   width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
   font-size:14px;background:#f8fafc;margin-bottom:12px;outline:none;
-  text-align:center;letter-spacing:3px;
+  text-align:left;letter-spacing:0;
 }
 .login-box input:focus{border-color:#159947;box-shadow:0 0 0 3px rgba(21,153,71,.14);background:#fff}
 .login-box button{

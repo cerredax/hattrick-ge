@@ -1,4 +1,4 @@
-﻿// â”€â”€ Render tabla â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+﻿// ── Render tabla ─────────────────────────────────────────────────
 function renderTabla() {
   var grp = document.getElementById('groupBy').value;
 
@@ -14,7 +14,7 @@ function renderTabla() {
         var bv  = b[k.col] === '' ? -Infinity : +b[k.col];
         var cmp = (av - bv) * k.dir;
         if (cmp !== 0) return cmp;
-        // Si la columna primaria es "aÃ±os", desempata automÃ¡ticamente por dÃ­as
+        // Si la columna primaria es "años", desempata automáticamente por días
         if (k.col === 'anos' && i === sortKeys.length - 1) {
           var ad = a.dias === '' ? -Infinity : +a.dias;
           var bd = b.dias === '' ? -Infinity : +b.dias;
@@ -32,10 +32,10 @@ function renderTabla() {
 
   if (list.length === 0) {
     var msg = jugadores.length === 0
-      ? '<div class="empty-icon">â³</div><div class="empty-title">Cargando jugadoresâ€¦</div>'
-      : '<div class="empty-icon">ðŸ”</div><div class="empty-title">Sin resultados</div>' +
-        '<div class="empty-desc">NingÃºn jugador coincide con los filtros aplicados.</div>' +
-        '<span class="empty-hint" onclick="limpiarFiltros()">Ã— Limpiar filtros</span>';
+      ? '<div class="empty-icon">⏳</div><div class="empty-title">Cargando jugadores…</div>'
+      : '<div class="empty-icon">🔍</div><div class="empty-title">Sin resultados</div>' +
+        '<div class="empty-desc">Ningún jugador coincide con los filtros aplicados.</div>' +
+        '<span class="empty-hint" onclick="limpiarFiltros()">× Limpiar filtros</span>';
     document.getElementById('tbody').innerHTML = '<tr><td colspan="28"><div class="empty-state">' + msg + '</div></td></tr>';
     return;
   }
@@ -76,7 +76,7 @@ function numCell(val) {
     : '<td class="empty">&middot;</td>';
 }
 
-// â”€â”€ EdiciÃ³n inline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Edición inline ───────────────────────────────────────────────
 function selHtml(id, opts, val) {
   var s = '<select class="er" id="' + id + '">';
   opts.forEach(function(o) {
@@ -97,7 +97,7 @@ function renderEditRow(j) {
   var htUrl = 'https://www.hattrick.org/Club/Players/Player.aspx?PlayerID=' + j.id;
   var r = '<tr class="edit-row" data-id="' + j.id + '">';
   r += '<td><strong>' + esc(j.nombre) + '</strong></td>';
-  r += '<td><a href="' + htUrl + '" target="_blank" style="color:var(--brand);font-family:monospace;font-size:10px;text-decoration:none">' + j.id + 'â†—</a></td>';
+  r += '<td><a href="' + htUrl + '" target="_blank" style="color:var(--brand);font-family:monospace;font-size:10px;text-decoration:none">' + j.id + '↗</a></td>';
   r += '<td>' + selHtml('er_pos',   POSS_OPTS, j.posicion) + '</td>';
   r += '<td>' + selHtml('er_esp',   ESPS_OPTS, j.esp)    + '</td>';
   r += '<td>' + erNum('er_port',    j.port)               + '</td>';
@@ -124,8 +124,8 @@ function renderEditRow(j) {
   r += '<td>' + erNum('er_exp',     j.experiencia, 38)    + '</td>';
   r += '<td>' + erTxt('er_notas',   j.notas,  120)        + '</td>';
   r += '<td style="white-space:nowrap">'
-    + '<button class="btn-sm btn-edit" onclick="saveRowEdit(\'' + j.id + '\')" title="Guardar">ðŸ’¾</button> '
-    + '<button class="btn-sm btn-del"  onclick="cancelEdit()" title="Cancelar">âœ–</button>'
+    + '<button class="btn-sm btn-edit" onclick="saveRowEdit(\'' + j.id + '\')" title="Guardar">💾</button> '
+    + '<button class="btn-sm btn-del"  onclick="cancelEdit()" title="Cancelar">✖</button>'
     + '</td>';
   r += '</tr>';
   return r;
@@ -185,7 +185,7 @@ async function saveRowEdit(id) {
   var savedNombre = jugadores[idx].nombre;
   editingId = null;
   renderTabla();
-  showToast('âœ“ ' + savedNombre + ' guardado.');
+  showToast('✓ ' + savedNombre + ' guardado.');
   setTimeout(function() {
     var row = document.querySelector('#tbody tr[data-id="' + savedId + '"]');
     if (row) {
@@ -195,18 +195,18 @@ async function saveRowEdit(id) {
   }, 20);
 }
 
-// â”€â”€ Render fila â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Render fila ──────────────────────────────────────────────────
 function renderRow(j) {
   if (String(j.id) === String(editingId)) return renderEditRow(j);
   var htUrl  = 'https://www.hattrick.org/Club/Players/Player.aspx?PlayerID=' + j.id;
   var posKey = POS_CLASS[j.posicion] || '';
-  var cBadge = j.contacto === 'SÃ­'
-    ? '<span class="badge-si" onclick="toggleContacto(\'' + j.id + '\',event)" title="Clic para cambiar">SÃ­</span>'
+  var cBadge = j.contacto === 'Sí'
+    ? '<span class="badge-si" onclick="toggleContacto(\'' + j.id + '\',event)" title="Clic para cambiar">Sí</span>'
     : '<span class="badge-no" onclick="toggleContacto(\'' + j.id + '\',event)" title="Clic para cambiar">No</span>';
 
   var r = '<tr data-id="' + j.id + '">';
   r += '<td onclick="openPlayerModal(\'' + j.id + '\')"><strong>' + esc(j.nombre) + '</strong></td>';
-  r += '<td><a href="' + htUrl + '" target="_blank" style="color:var(--brand);text-decoration:none;font-family:monospace;font-size:10px">' + j.id + 'â†—</a></td>';
+  r += '<td><a href="' + htUrl + '" target="_blank" style="color:var(--brand);text-decoration:none;font-family:monospace;font-size:10px">' + j.id + '↗</a></td>';
   r += '<td>' + (posKey ? '<span class="badge badge-' + posKey + '">' + esc(j.posicion) + '</span>' : '<span style="color:#c2cbd8">&mdash;</span>') + '</td>';
   r += '<td>' + espBadgeHtml(j.esp, 'esp-compact') + '</td>';
   r += skillCell(j.port) + skillCell(j.def) + skillCell(j.jug) + skillCell(j.lat);
@@ -220,21 +220,21 @@ function renderRow(j) {
   r += '<td style="color:#475569"><small>' + esc(j.dueno) + '</small></td>';
   r += '<td>' + cBadge + '</td>';
   r += numCell(j.liderazgo) + numCell(j.experiencia);
-  r += '<td><small style="color:var(--muted)">' + esc((j.notas || '').substring(0, 50)) + (j.notas && j.notas.length > 50 ? 'â€¦' : '') + '</small></td>';
+  r += '<td><small style="color:var(--muted)">' + esc((j.notas || '').substring(0, 50)) + (j.notas && j.notas.length > 50 ? '…' : '') + '</small></td>';
   r += '<td style="white-space:nowrap">'
-    + '<button class="btn-sm btn-edit" onclick="startEdit(\'' + j.id + '\')" title="Editar fila">âœï¸</button>'
+    + '<button class="btn-sm btn-edit" onclick="startEdit(\'' + j.id + '\')" title="Editar fila">✏️</button>'
     + '</td>';
   r += '</tr>';
   return r;
 }
 
-// â”€â”€ Toggle contacto â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Toggle contacto ──────────────────────────────────────────────
 async function toggleContacto(id, event) {
   event.stopPropagation();
   var idx = jugadores.findIndex(function(j) { return String(j.id) === String(id); });
   if (idx < 0) return;
   var anterior = jugadores[idx].contacto;
-  var nuevo    = anterior === 'SÃ­' ? 'No' : 'SÃ­';
+  var nuevo    = anterior === 'Sí' ? 'No' : 'Sí';
   var res = await client.from('jugadores').update({ contacto: nuevo }).eq('id', id);
   if (res.error) {
     showToast('Error al actualizar contacto: ' + res.error.message, 'err');
@@ -243,3 +243,4 @@ async function toggleContacto(id, event) {
   jugadores[idx].contacto = nuevo;
   renderTabla();
 }
+

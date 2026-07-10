@@ -1,4 +1,4 @@
-// ── Actualización individual vía Edge Function ───────────────────
+﻿// ── Actualización individual vía Edge Function ───────────────────
 async function actualizarFisicoJugadorDesdeHattrick(j) {
   var res = await client.functions.invoke('update-hattrick-player', {
     body: { playerId: j.id }
@@ -57,3 +57,4 @@ async function actualizarFisicoDesdeHattrick() {
     showToast('Revisa la Edge Function: despliegue, secreto SERVICE_ROLE_KEY y logs de Supabase.' + (firstError ? ' Detalle: ' + firstError : ''), 'warn');
   }
 }
+
