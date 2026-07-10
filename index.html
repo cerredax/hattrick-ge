@@ -59,8 +59,22 @@
   </header>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('jugadores')">Jugadores</div>
-    <div class="tab" onclick="switchTab('importar')">Importar jugador</div>
+    <div class="tab active" onclick="switchTab('jugadores')">
+      <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="7" cy="6" r="3"/>
+        <path d="M1 16c0-3.31 2.69-6 6-6h2c3.31 0 6 2.69 6 6"/>
+        <circle cx="14" cy="5.5" r="2.2" opacity=".45"/>
+        <path d="M17 14.5c0-2.1-1.3-3.9-3.2-4.4" opacity=".45"/>
+      </svg>
+      Jugadores
+    </div>
+    <div class="tab" onclick="switchTab('importar')">
+      <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 2v10M5.5 8.5 9 12l3.5-3.5"/>
+        <path d="M2 15h14"/>
+      </svg>
+      Importar desde Foxtrick
+    </div>
   </div>
 
   <!-- ═══ TAB JUGADORES ══════════════════════════════════════ -->
@@ -138,69 +152,10 @@
       <span class="counter" id="counter"></span>
       <button class="btn-clear-filtros" id="btnLimpiar" onclick="limpiarFiltros()" title="Limpiar todos los filtros">× Limpiar</button>
       <button class="btn-add-player" id="btnAlta" onclick="toggleAltaPanel()">Añadir jugador</button>
+      <button class="btn-density" id="btnDensity" onclick="toggleDensity()" title="Cambiar densidad de la tabla">⊟ Compact</button>
       <button class="btn-export" onclick="exportarXLSX()">Descargar XLSX</button>
     </div>
 
-    <!-- Panel Alta (fijo en flujo) -->
-    <div id="altaPanel" class="alta-panel">
-      <div class="alta-header">
-        <h2>Añadir jugador</h2>
-        <button class="close-btn" style="background:var(--line);color:var(--muted)" onclick="closeAltaPanel()">×</button>
-      </div>
-      <div class="alta-body">
-        <div class="alta-g3">
-          <div class="edit-group"><label>Nombre *</label><input type="text" id="nNombre" placeholder="Nombre completo"></div>
-          <div class="edit-group"><label>ID Hattrick *</label><input type="text" id="nId" placeholder="123456789"></div>
-          <div class="edit-group"><label>Dueño / Club</label><input type="text" id="nDueno" placeholder="Club"></div>
-        </div>
-        <div class="alta-g4">
-          <div class="edit-group"><label>Posición</label>
-            <select id="nPosicion"><option value="">—</option><option value="Portero">Portero</option><option value="Delantero">Delantero</option><option value="Mediocentro">Mediocentro</option><option value="Extremo">Extremo</option><option value="Defensa Central">Def. Central</option><option value="Defensa Lateral">Def. Lateral</option></select>
-          </div>
-          <div class="edit-group"><label>Especialidad</label>
-            <select id="nEsp"><option value="">—</option><option value="Técnico">Técnico</option><option value="Imprevisible">Imprevisible</option><option value="Potente">Potente</option><option value="Rápido">Rápido</option><option value="Cabezón">Cabezón</option></select>
-          </div>
-          <div class="edit-group"><label>Nivel</label>
-            <select id="nNivel"><option value="">—</option><option value="Continental Incompleto">Cont. Incompleto</option><option value="Continental Completo">Cont. Completo</option><option value="Mundial Incompleto">Mundial Incompleto</option><option value="Mundial Completo">Mundial Completo</option></select>
-          </div>
-          <div class="edit-group"><label>Contacto</label>
-            <select id="nContacto"><option value="No">No</option><option value="Sí">Sí</option></select>
-          </div>
-        </div>
-        <div>
-          <div class="alta-section-label">Habilidades</div>
-          <div class="alta-g7">
-            <div class="edit-group"><label>Portería</label><input type="number" id="nPort" min="1" max="20"></div>
-            <div class="edit-group"><label>Defensa</label><input type="number" id="nDef"  min="1" max="20"></div>
-            <div class="edit-group"><label>Jugadas</label><input type="number" id="nJug"  min="1" max="20"></div>
-            <div class="edit-group"><label>Lateral</label><input type="number" id="nLat"  min="1" max="20"></div>
-            <div class="edit-group"><label>Pases</label><input type="number" id="nPas"    min="1" max="20"></div>
-            <div class="edit-group"><label>Anotación</label><input type="number" id="nAnot" min="1" max="20"></div>
-            <div class="edit-group"><label>Balón Par.</label><input type="number" id="nBp"  min="1" max="20"></div>
-          </div>
-        </div>
-        <div class="alta-g7">
-          <div class="edit-group"><label>HTMS</label><input type="number" id="nHtms"></div>
-          <div class="edit-group"><label>HTMS28</label><input type="number" id="nHtms28"></div>
-          <div class="edit-group"><label>TSI</label><input type="number" id="nTsi"></div>
-          <div class="edit-group"><label>Forma</label><input type="number" id="nForma" min="1" max="8"></div>
-          <div class="edit-group"><label>Resistencia</label><input type="number" id="nResistencia"></div>
-          <div class="edit-group"><label>Años</label><input type="number" id="nAnos"></div>
-          <div class="edit-group"><label>Días</label><input type="number" id="nDias"></div>
-        </div>
-        <div class="alta-g5">
-          <div class="edit-group"><label>Tier</label><input type="text" id="nTier" placeholder="A, B, C..."></div>
-          <div class="edit-group"><label>Liderazgo</label><input type="number" id="nLiderazgo"></div>
-          <div class="edit-group"><label>Experiencia</label><input type="number" id="nExperiencia"></div>
-          <div class="edit-group span-2"><label>Notas</label><input type="text" id="nNotas" placeholder="Notas opcionales"></div>
-        </div>
-        <div class="alta-actions">
-          <button class="pm-save" style="width:auto;padding:9px 24px" onclick="saveNewPlayer()">💾 Crear jugador</button>
-          <button class="btn-limpiar" onclick="resetAltaForm()">Limpiar</button>
-          <div class="msg" id="newMsg"></div>
-        </div>
-      </div>
-    </div>
 
     <!-- Tabla -->
     <div class="table-wrap">
@@ -246,8 +201,8 @@
   <div class="tab-content" id="tab-importar">
     <div class="import-panel">
       <div class="import-left">
-        <h2>Actualizar jugador</h2>
-        <p>Pega el texto del perfil de Hattrick. Se busca el jugador por su ID y se actualiza en la base de datos.</p>
+        <h2>Importar desde Foxtrick</h2>
+        <p>Pega el texto del perfil exportado desde Foxtrick. Se busca el jugador por su ID y se actualiza en la base de datos.</p>
         <textarea id="playerText" placeholder="Nombre Apellido [playerid=XXXXXXX]
 21 años y 2 días...
 Especialidad Cabeceador
@@ -295,6 +250,135 @@ Especialidad Cabeceador
     </div>
   </div>
 </div>
+
+<!-- ══ MODAL ALTA JUGADOR ═════════════════════════════════════ -->
+<div class="overlay" id="altaModal" onclick="closeAltaIfOutside(event)">
+  <div class="alta-modal">
+
+    <div class="alta-modal-hdr">
+      <div class="alta-modal-title">
+        <span class="pm-kicker">Nueva ficha</span>
+        <h2>Añadir jugador</h2>
+      </div>
+      <button class="pm-header close-btn" onclick="closeAltaPanel()">×</button>
+    </div>
+
+    <div class="alta-modal-body">
+
+      <!-- ── Columna izquierda: identificación ─────────────────── -->
+      <div class="alta-col-left">
+        <p class="alta-col-desc">Rellena los datos básicos del jugador. Nombre e ID de Hattrick son obligatorios.</p>
+
+        <div class="edit-group">
+          <label>Nombre *</label>
+          <input type="text" id="nNombre" placeholder="Nombre completo">
+        </div>
+        <div class="edit-group">
+          <label>ID Hattrick *</label>
+          <input type="text" id="nId" placeholder="123456789">
+        </div>
+        <div class="edit-group">
+          <label>Posición</label>
+          <select id="nPosicion">
+            <option value="">—</option>
+            <option value="Portero">Portero</option>
+            <option value="Delantero">Delantero</option>
+            <option value="Mediocentro">Mediocentro</option>
+            <option value="Extremo">Extremo</option>
+            <option value="Defensa Central">Defensa Central</option>
+            <option value="Defensa Lateral">Defensa Lateral</option>
+          </select>
+        </div>
+        <div class="edit-group">
+          <label>Especialidad</label>
+          <select id="nEsp">
+            <option value="">—</option>
+            <option value="Técnico">Técnico</option>
+            <option value="Imprevisible">Imprevisible</option>
+            <option value="Potente">Potente</option>
+            <option value="Rápido">Rápido</option>
+            <option value="Cabezón">Cabezón</option>
+          </select>
+        </div>
+        <div class="edit-group">
+          <label>Nivel</label>
+          <select id="nNivel">
+            <option value="">—</option>
+            <option value="Continental Incompleto">Continental Incompleto</option>
+            <option value="Continental Completo">Continental Completo</option>
+            <option value="Mundial Incompleto">Mundial Incompleto</option>
+            <option value="Mundial Completo">Mundial Completo</option>
+          </select>
+        </div>
+        <div class="alta-row2">
+          <div class="edit-group">
+            <label>Contacto</label>
+            <select id="nContacto"><option value="No">No</option><option value="Sí">Sí</option></select>
+          </div>
+          <div class="edit-group">
+            <label>Tier</label>
+            <input type="text" id="nTier" placeholder="A, B, C…">
+          </div>
+        </div>
+        <div class="edit-group">
+          <label>Dueño / Club</label>
+          <input type="text" id="nDueno" placeholder="Club actual">
+        </div>
+        <div class="edit-group">
+          <label>Notas</label>
+          <textarea id="nNotas" placeholder="Observaciones opcionales…" rows="3"></textarea>
+        </div>
+
+        <div class="alta-actions">
+          <button class="pm-save" onclick="saveNewPlayer()">Crear jugador</button>
+          <button class="btn-limpiar" onclick="resetAltaForm()">Limpiar</button>
+        </div>
+        <div class="msg" id="newMsg"></div>
+      </div>
+
+      <!-- ── Columna derecha: habilidades y stats ──────────────── -->
+      <div class="alta-col-right">
+        <div class="alta-section">
+          <div class="alta-section-label">Habilidades</div>
+          <div class="alta-skills-grid">
+            <div class="edit-group"><label>Portería</label><input type="number" id="nPort" min="1" max="20"></div>
+            <div class="edit-group"><label>Defensa</label><input type="number" id="nDef"   min="1" max="20"></div>
+            <div class="edit-group"><label>Jugadas</label><input type="number" id="nJug"   min="1" max="20"></div>
+            <div class="edit-group"><label>Lateral</label><input type="number" id="nLat"   min="1" max="20"></div>
+            <div class="edit-group"><label>Pases</label><input type="number" id="nPas"     min="1" max="20"></div>
+            <div class="edit-group"><label>Anotación</label><input type="number" id="nAnot" min="1" max="20"></div>
+            <div class="edit-group"><label>Balón Par.</label><input type="number" id="nBp"  min="1" max="20"></div>
+          </div>
+        </div>
+
+        <div class="alta-section">
+          <div class="alta-section-label">Métricas</div>
+          <div class="alta-metrics-grid">
+            <div class="edit-group"><label>HTMS</label><input type="number" id="nHtms"></div>
+            <div class="edit-group"><label>HTMS28</label><input type="number" id="nHtms28"></div>
+            <div class="edit-group"><label>TSI</label><input type="number" id="nTsi"></div>
+            <div class="edit-group"><label>Forma</label><input type="number" id="nForma" min="1" max="8"></div>
+            <div class="edit-group"><label>Resistencia</label><input type="number" id="nResistencia"></div>
+          </div>
+        </div>
+
+        <div class="alta-section">
+          <div class="alta-section-label">Edad y perfil</div>
+          <div class="alta-metrics-grid">
+            <div class="edit-group"><label>Años</label><input type="number" id="nAnos"></div>
+            <div class="edit-group"><label>Días</label><input type="number" id="nDias"></div>
+            <div class="edit-group"><label>Liderazgo</label><input type="number" id="nLiderazgo"></div>
+            <div class="edit-group"><label>Experiencia</label><input type="number" id="nExperiencia"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST CONTAINER ════════════════════════════════════════ -->
+<div id="toastContainer"></div>
 
 <script src="app.js"></script>
 </body>

@@ -51,9 +51,11 @@ function mostrarApp() {
 // ══════════════════════════════════════════════════════════════
 async function cargarJugadores() {
   document.getElementById('stats').textContent = 'Cargando...';
+  mostrarSkeleton();
   var res = await client.from('jugadores').select('*').order('nombre', { ascending: true });
   if (res.error) {
     document.getElementById('stats').textContent = 'Error: ' + res.error.message;
+    showToast('Error al conectar con la base de datos.', 'err');
     return;
   }
   jugadores = res.data.map(mapFromDb);
@@ -237,6 +239,16 @@ function renderTabla() {
   document.getElementById('counter').textContent = list.length < total
     ? list.length + ' de ' + total
     : total + ' jugadores';
+  if (list.length === 0) {
+    var msg = jugadores.length === 0
+      ? '<div class="empty-icon">⏳</div><div class="empty-title">Cargando jugadores…</div>'
+      : '<div class="empty-icon">🔍</div><div class="empty-title">Sin resultados</div>' +
+        '<div class="empty-desc">Ningún jugador coincide con los filtros aplicados.</div>' +
+        '<span class="empty-hint" onclick="limpiarFiltros()">× Limpiar filtros</span>';
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="28"><div class="empty-state">' + msg + '</div></td></tr>';
+    return;
+  }
+
   var html = '';
   if (grp) {
     var groups = {};
@@ -380,11 +392,13 @@ async function saveRowEdit(id) {
   jugadores[idx].notas       = gs('er_notas');
 
   var res = await client.from('jugadores').upsert(mapToDb(jugadores[idx]), { onConflict: 'id' });
-  if (res.error) { alert('Error al guardar: ' + res.error.message); return; }
+  if (res.error) { showToast('Error al guardar: ' + res.error.message, 'err'); return; }
 
   var savedId = id;
+  var savedNombre = jugadores[idx].nombre;
   editingId = null;
   renderTabla();
+  showToast('✓ ' + savedNombre + ' guardado.');
   setTimeout(function() {
     var row = document.querySelector('#tbody tr[data-id="' + savedId + '"]');
     if (row) {
@@ -638,7 +652,9 @@ async function confirmarImport() {
 
   if (idx >= 0) jugadores[idx] = jugador; else jugadores.push(jugador);
   parsedImport = null;
-  showImportMsg('✅ ' + (jugador.nombre || d.id) + (idx >= 0 ? ' actualizado.' : ' añadido.'), 'ok');
+  var accion = idx >= 0 ? ' actualizado.' : ' añadido.';
+  showImportMsg('✅ ' + (jugador.nombre || d.id) + accion, 'ok');
+  showToast('✓ ' + (jugador.nombre || d.id) + accion);
   renderTabla();
 }
 
@@ -664,26 +680,25 @@ async function deletePlayer(id) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  NUEVA FICHA (panel fijo)
+//  NUEVA FICHA (modal)
 // ══════════════════════════════════════════════════════════════
 function toggleAltaPanel() {
-  var p = document.getElementById('altaPanel');
-  var btn = document.getElementById('btnAlta');
-  var open = p.style.display !== 'none';
-  if (open) {
-    p.style.display = 'none';
-    btn.textContent = 'Añadir jugador';
+  var m = document.getElementById('altaModal');
+  if (m.classList.contains('open')) {
+    closeAltaPanel();
   } else {
     resetAltaForm();
-    p.style.display = 'block';
-    btn.textContent = 'Cerrar alta';
+    m.classList.add('open');
     document.getElementById('nNombre').focus();
   }
 }
 
 function closeAltaPanel() {
-  document.getElementById('altaPanel').style.display = 'none';
-  document.getElementById('btnAlta').textContent = 'Añadir jugador';
+  document.getElementById('altaModal').classList.remove('open');
+}
+
+function closeAltaIfOutside(e) {
+  if (e.target === document.getElementById('altaModal')) closeAltaPanel();
 }
 
 function resetAltaForm() {
@@ -729,12 +744,50 @@ async function saveNewPlayer() {
 
   jugadores.push(mapFromDb(row));
   jugadores.sort(function(a,b){ return a.nombre.localeCompare(b.nombre,'es'); });
-  showNewMsg('✅ ' + nombre + ' añadido.','ok');
+  showToast('✓ ' + nombre + ' añadido.');
   renderTabla();
-  setTimeout(closeAltaPanel, 1500);
+  closeAltaPanel();
 }
 
 function showNewMsg(txt, cls) {
   var el = document.getElementById('newMsg');
   el.textContent = txt; el.className = 'msg ' + cls; el.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════════════
+function showToast(txt, type) {
+  var c = document.getElementById('toastContainer');
+  var el = document.createElement('div');
+  el.className = 'toast ' + (type || 'ok');
+  el.textContent = txt;
+  c.appendChild(el);
+  var dur = type === 'err' ? 5000 : type === 'warn' ? 4000 : 3000;
+  setTimeout(function(){ if (el.parentNode) el.remove(); }, dur);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SKELETON LOADER
+// ══════════════════════════════════════════════════════════════
+function mostrarSkeleton() {
+  var cols = [130,55,85,55,28,28,28,28,28,28,28,45,50,45,28,28,75,28,28,28,28,28,85,65,28,28,90,40];
+  var html = '';
+  for (var i = 0; i < 9; i++) {
+    html += '<tr class="skeleton-row">';
+    cols.forEach(function(w) {
+      var rw = Math.round(w * (0.55 + Math.random() * 0.45));
+      html += '<td><div class="skeleton-cell" style="width:' + rw + 'px"></div></td>';
+    });
+    html += '</tr>';
+  }
+  document.getElementById('tbody').innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DENSIDAD
+// ══════════════════════════════════════════════════════════════
+function toggleDensity() {
+  var compact = document.body.classList.toggle('compact');
+  document.getElementById('btnDensity').textContent = compact ? '⊞ Normal' : '⊟ Compact';
 }
