@@ -23,7 +23,7 @@
       <div class="login-mark">GEQ</div>
       <div class="login-eyebrow">Guinea Ecuatorial · Scouting</div>
       <h1>Hattrick GEQ</h1>
-      <p>Base de talento nacional — Gen. 41</p>
+      <p>Base de talento nacional</p>
       <input type="password" id="pwdInput" placeholder="Contraseña"
              onkeydown="if(event.key==='Enter')login()">
       <button onclick="login()">Entrar</button>
@@ -54,26 +54,41 @@
       <span class="geq-pill" id="stats">Conectando...</span>
     </div>
     <div class="geq-actions">
+      <button class="btn-help" onclick="toggleHelp()" title="Ayuda y tutorial">?</button>
       <button class="btn-reload" onclick="cargarJugadores()">↻ Recargar</button>
     </div>
   </header>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('jugadores')">
+    <div class="tab active" data-tab="jugadores" onclick="switchTab('jugadores')">
       <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="7" cy="6" r="3"/>
         <path d="M1 16c0-3.31 2.69-6 6-6h2c3.31 0 6 2.69 6 6"/>
         <circle cx="14" cy="5.5" r="2.2" opacity=".45"/>
         <path d="M17 14.5c0-2.1-1.3-3.9-3.2-4.4" opacity=".45"/>
       </svg>
-      Jugadores
+      Scouting
     </div>
-    <div class="tab" onclick="switchTab('importar')">
+    <div class="tab" data-tab="importar" onclick="switchTab('importar')">
       <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 2v10M5.5 8.5 9 12l3.5-3.5"/>
         <path d="M2 15h14"/>
       </svg>
       Importar desde Foxtrick
+    </div>
+    <div class="tab" data-tab="futuribles-sub21" onclick="switchTab('futuribles-sub21')">
+      <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 2v10M5.5 8.5 9 12l3.5-3.5"/>
+        <path d="M2 15h14"/>
+      </svg>
+      Futuribles Sub-21
+    </div>
+    <div class="tab" data-tab="futuribles-abs" onclick="switchTab('futuribles-abs')">
+      <svg class="tab-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 2v10M5.5 8.5 9 12l3.5-3.5"/>
+        <path d="M2 15h14"/>
+      </svg>
+      Futuribles Abs.
     </div>
   </div>
 
@@ -87,11 +102,11 @@
         <select id="filtPos" onchange="renderTabla()">
           <option value="">Todas</option>
           <option value="Portero">Portero</option>
-          <option value="Delantero">Delantero</option>
-          <option value="Mediocentro">Mediocentro</option>
-          <option value="Extremo">Extremo</option>
           <option value="Defensa Central">Def. Central</option>
           <option value="Defensa Lateral">Def. Lateral</option>
+          <option value="Mediocentro">Mediocentro</option>
+          <option value="Extremo">Extremo</option>
+          <option value="Delantero">Delantero</option>
         </select>
       </div>
       <div class="fgroup">
@@ -134,6 +149,20 @@
         </select>
       </div>
       <div class="sep"></div>
+      <div class="fgroup sort-wrap" id="sortWrap">
+        <button class="btn-sort-trigger" id="btnSortTrigger" onclick="toggleSortPanel()">
+          ⇅ Ordenar <span class="sort-badge" id="sortBadge" style="display:none">0</span>
+        </button>
+        <div class="sort-panel" id="sortPanel" style="display:none">
+          <div class="sort-panel-hdr">
+            <span>Criterios de ordenación</span>
+            <button class="sort-panel-clear" onclick="clearSort()">Limpiar todo</button>
+          </div>
+          <div id="sortLevels"></div>
+          <button class="sort-add-level" onclick="addSortLevel()">＋ Añadir nivel</button>
+        </div>
+      </div>
+      <div class="sep"></div>
       <div class="fgroup">
         <label>Agrupar por</label>
         <select id="groupBy" onchange="renderTabla()">
@@ -152,7 +181,7 @@
       <span class="counter" id="counter"></span>
       <button class="btn-clear-filtros" id="btnLimpiar" onclick="limpiarFiltros()" title="Limpiar todos los filtros">× Limpiar</button>
       <button class="btn-add-player" id="btnAlta" onclick="toggleAltaPanel()">Añadir jugador</button>
-      <button class="btn-density" id="btnDensity" onclick="toggleDensity()" title="Cambiar densidad de la tabla">⊟ Compact</button>
+      <button class="btn-update-ht" id="btnActualizarHt" onclick="actualizarFisicoDesdeHattrick()" title="Actualiza TSI, forma y resistencia desde Hattrick">Actualizar forma/TSI</button>
       <button class="btn-export" onclick="exportarXLSX()">Descargar XLSX</button>
     </div>
 
@@ -222,33 +251,39 @@ Especialidad Cabeceador
     </div>
   </div>
 
+  <!-- ═══ TAB FUTURIBLES SUB-21 ════════════════════════════════ -->
+  <div class="tab-content" id="tab-futuribles-sub21">
+    <div class="coming-soon">
+      <div class="cs-icon">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="20" cy="20" r="17"/>
+          <path d="M20 12v9l5 3"/>
+        </svg>
+      </div>
+      <div class="cs-title">Próximamente</div>
+      <div class="cs-desc">La importación de futuribles Sub-21 está en desarrollo.<br>Pronto podrás importar la lista directamente desde Foxtrick.</div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB FUTURIBLES ABS ═══════════════════════════════════ -->
+  <div class="tab-content" id="tab-futuribles-abs">
+    <div class="coming-soon">
+      <div class="cs-icon">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="20" cy="20" r="17"/>
+          <path d="M20 12v9l5 3"/>
+        </svg>
+      </div>
+      <div class="cs-title">Próximamente</div>
+      <div class="cs-desc">La importación de futuribles Absolutos está en desarrollo.<br>Pronto podrás importar la lista directamente desde Foxtrick.</div>
+    </div>
+  </div>
+
 </div><!-- /#app -->
 
 <!-- ══ MODAL JUGADOR ══════════════════════════════════════════ -->
 <div class="overlay" id="playerOverlay" onclick="closePlayerIfOutside(event)">
-  <div class="player-modal">
-    <div class="pm-header">
-      <div class="pm-title-block">
-        <span class="pm-kicker">Ficha de jugador</span>
-        <h2 id="modalNombre">—</h2>
-        <div class="pm-meta" id="modalMeta"></div>
-      </div>
-      <div class="pm-actions">
-        <a class="pm-link" id="modalHtUrl" href="#" target="_blank">Hattrick ↗</a>
-        <button class="close-btn" onclick="closePlayerModal()">×</button>
-      </div>
-    </div>
-    <div class="pm-body">
-      <div class="pm-section">
-        <h4>Habilidades</h4>
-        <div class="stats-grid" id="modalStats"></div>
-      </div>
-      <div class="pm-section">
-        <h4>Información</h4>
-        <div class="info-rows" id="modalInfo"></div>
-      </div>
-    </div>
-  </div>
+  <div class="player-modal"></div>
 </div>
 
 <!-- ══ MODAL ALTA JUGADOR ═════════════════════════════════════ -->
@@ -260,7 +295,7 @@ Especialidad Cabeceador
         <span class="pm-kicker">Nueva ficha</span>
         <h2>Añadir jugador</h2>
       </div>
-      <button class="pm-header close-btn" onclick="closeAltaPanel()">×</button>
+      <button class="close-btn" onclick="closeAltaPanel()">×</button>
     </div>
 
     <div class="alta-modal-body">
@@ -282,11 +317,11 @@ Especialidad Cabeceador
           <select id="nPosicion">
             <option value="">—</option>
             <option value="Portero">Portero</option>
-            <option value="Delantero">Delantero</option>
-            <option value="Mediocentro">Mediocentro</option>
-            <option value="Extremo">Extremo</option>
             <option value="Defensa Central">Defensa Central</option>
             <option value="Defensa Lateral">Defensa Lateral</option>
+            <option value="Mediocentro">Mediocentro</option>
+            <option value="Extremo">Extremo</option>
+            <option value="Delantero">Delantero</option>
           </select>
         </div>
         <div class="edit-group">
@@ -354,23 +389,120 @@ Especialidad Cabeceador
         <div class="alta-section">
           <div class="alta-section-label">Métricas</div>
           <div class="alta-metrics-grid">
-            <div class="edit-group"><label>HTMS</label><input type="number" id="nHtms"></div>
-            <div class="edit-group"><label>HTMS28</label><input type="number" id="nHtms28"></div>
-            <div class="edit-group"><label>TSI</label><input type="number" id="nTsi"></div>
+            <div class="edit-group"><label>HTMS</label><input type="number" id="nHtms" min="0"></div>
+            <div class="edit-group"><label>HTMS28</label><input type="number" id="nHtms28" min="0"></div>
+            <div class="edit-group"><label>TSI</label><input type="number" id="nTsi" min="0"></div>
             <div class="edit-group"><label>Forma</label><input type="number" id="nForma" min="1" max="8"></div>
-            <div class="edit-group"><label>Resistencia</label><input type="number" id="nResistencia"></div>
+            <div class="edit-group"><label>Resistencia</label><input type="number" id="nResistencia" min="0"></div>
           </div>
         </div>
 
         <div class="alta-section">
           <div class="alta-section-label">Edad y perfil</div>
           <div class="alta-metrics-grid">
-            <div class="edit-group"><label>Años</label><input type="number" id="nAnos"></div>
-            <div class="edit-group"><label>Días</label><input type="number" id="nDias"></div>
-            <div class="edit-group"><label>Liderazgo</label><input type="number" id="nLiderazgo"></div>
-            <div class="edit-group"><label>Experiencia</label><input type="number" id="nExperiencia"></div>
+            <div class="edit-group"><label>Años</label><input type="number" id="nAnos" min="0"></div>
+            <div class="edit-group"><label>Días</label><input type="number" id="nDias" min="0"></div>
+            <div class="edit-group"><label>Liderazgo</label><input type="number" id="nLiderazgo" min="0"></div>
+            <div class="edit-group"><label>Experiencia</label><input type="number" id="nExperiencia" min="0"></div>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL AYUDA ════════════════════════════════════════════ -->
+<div class="overlay" id="helpModal" onclick="closeHelpIfOutside(event)">
+  <div class="help-modal">
+    <div class="pm-header">
+      <div class="pm-title-block">
+        <span class="pm-kicker">Hattrick GEQ</span>
+        <h2>Guía de uso</h2>
+      </div>
+      <div class="pm-actions">
+        <button class="close-btn" onclick="toggleHelp()">×</button>
+      </div>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="14" height="14" rx="2"/><path d="M1 5h14M5 5v10"/></svg>
+          Tabla y navegación
+        </div>
+        <ul class="help-list">
+          <li><span class="help-key">Clic en nombre</span><span>Abre la ficha completa del jugador con habilidades, forma, resistencia y perfil.</span></li>
+          <li><span class="help-key">Sí / No</span><span>Alterna el contacto al instante y lo guarda en la base de datos.</span></li>
+          <li><span class="help-key">Hattrick ↗</span><span>Abre el perfil del jugador en Hattrick en una nueva pestaña.</span></li>
+          <li><span class="help-key">↻ Recargar</span><span>Vuelve a cargar todos los datos desde la base de datos.</span></li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3.31 2.69-5 6-5s6 1.69 6 5"/></svg>
+          Ficha del jugador
+        </div>
+        <ul class="help-list">
+          <li><span class="help-tip">ℹ</span><span>La cabecera muestra el nombre, posición, especialidad, edad, club y barras de <strong>Forma</strong> y <strong>Resistencia</strong> juntas.</span></li>
+          <li><span class="help-tip">ℹ</span><span>Los chips de color indican el <strong>Nivel</strong>, <strong>Tier</strong> y <strong>TSI</strong> del jugador.</span></li>
+          <li><span class="help-tip">ℹ</span><span>Las barras de habilidad usan la escala oficial Hattrick: Desastroso (1) → Horrible (2) → Pobre (3) → Débil (4) → … → Divino (20).</span></li>
+          <li><span class="help-tip">ℹ</span><span>La sección <strong>Perfil</strong> agrupa Liderazgo, Experiencia, HTMS, HTMS28 y Portal en tarjetas con su etiqueta de nivel.</span></li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 12V4M2 10l2 2 2-2M12 4v8M10 6l2-2 2 2"/></svg>
+          Ordenación multicol
+        </div>
+        <ul class="help-list">
+          <li><span class="help-key">Clic cabecera</span><span>Ordena por esa columna. Clic de nuevo invierte el orden (↑ / ↓ en azul).</span></li>
+          <li><span class="help-key">Shift + clic</span><span>Añade un segundo nivel de ordenación, marcado en morado (↑² / ↓²). Ejemplo: <em>Años</em> → Shift+<em>HTMS</em> ordena por edad y, dentro de cada edad, por habilidad.</span></li>
+          <li><span class="help-key">⇅ Ordenar</span><span>Abre el panel de criterios múltiples donde puedes añadir, reordenar y eliminar niveles de ordenación.</span></li>
+          <li><span class="help-tip">ℹ</span><span>Si el nivel primario es <em>Años</em>, los días se usan automáticamente como desempate secundario.</span></li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h12M5 8h6M7 12h2"/></svg>
+          Filtros y búsqueda
+        </div>
+        <ul class="help-list">
+          <li><span class="help-tip">ℹ</span><span>Los filtros <strong>Posición, Esp., Años, Contacto</strong> y <strong>Portal</strong> se pueden combinar libremente. Orden de posiciones: Portero · DC · DL · MC · Extremo · Delantero.</span></li>
+          <li><span class="help-key">Buscar</span><span>Filtra por nombre o club en tiempo real.</span></li>
+          <li><span class="help-key">Agrupar por</span><span>Agrupa las filas por Posición, Nivel, Experiencia o Liderazgo.</span></li>
+          <li><span class="help-key">× Limpiar</span><span>Restablece todos los filtros de golpe. Aparece solo cuando hay alguno activo.</span></li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2l3 3-8 8H3v-3L11 2z"/></svg>
+          Edición de jugadores
+        </div>
+        <ul class="help-list">
+          <li><span class="help-key">✏ Editar</span><span>Convierte la fila en campos editables directamente en la tabla.</span></li>
+          <li><span class="help-key">Enter</span><span>Guarda los cambios y cierra el modo edición.</span></li>
+          <li><span class="help-key">Escape</span><span>Cancela la edición sin guardar ningún cambio.</span></li>
+          <li><span class="help-key">Añadir jugador</span><span>Abre el modal de alta para crear un jugador nuevo manualmente.</span></li>
+          <li><span class="help-tip">ℹ</span><span>Al guardar, la fila destella en verde. Si cierras el navegador con edición activa, recibirás un aviso.</span></li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v9M5 8l3 3 3-3M2 13h12"/></svg>
+          Importar y exportar
+        </div>
+        <ul class="help-list">
+          <li><span class="help-key">Foxtrick</span><span>Pega el texto del perfil exportado desde Foxtrick. El jugador se detecta por ID y sus datos se actualizan automáticamente.</span></li>
+          <li><span class="help-key">Vista previa</span><span>Revisa siempre los datos detectados antes de confirmar. Los campos no detectados se muestran en gris.</span></li>
+          <li><span class="help-tip">ℹ</span><span>Campos importados: edad, TSI, especialidad, posición, portería, defensa, jugadas, lateral, pases, anotación, balón parado, forma, resistencia, HTMS, dueño, liderazgo y experiencia.</span></li>
+          <li><span class="help-key">Descargar XLSX</span><span>Exporta los jugadores visibles (según filtros activos) a un fichero Excel.</span></li>
+        </ul>
       </div>
 
     </div>
@@ -380,6 +512,17 @@ Especialidad Cabeceador
 <!-- ══ TOAST CONTAINER ════════════════════════════════════════ -->
 <div id="toastContainer"></div>
 
-<script src="app.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/state.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/tabla.js"></script>
+<script src="js/sort.js"></script>
+<script src="js/modales.js"></script>
+<script src="js/importar.js"></script>
+<script src="js/exportar.js"></script>
+<script src="js/hattrick-update.js"></script>
 </body>
 </html>
