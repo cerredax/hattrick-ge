@@ -7,6 +7,8 @@ var ESP_CLASS = {
   'Técnico':'tec','Imprevisible':'imp','Potente':'pot',
   'Rápido':'rap','Cabezón':'cab'
 };
+// Mapa numérico Hattrick → nombre de especialidad (usado en parser NTPlayers)
+var ESP_BY_NUM = {'1':'Técnico','2':'Rápido','3':'Potente','4':'Imprevisible','5':'Cabezón'};
 
 // ── Etiquetas de nivel de habilidad (índice = valor numérico) ───
 var NIVEL_LABEL = [

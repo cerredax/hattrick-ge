@@ -1,7 +1,3 @@
-// ── Estado ───────────────────────────────────────────────────────
-var futuriblesS21 = [];
-var futuriblesS21Parsed = null;
-
 // ── Mapeo DB ──────────────────────────────────────────────────────
 function mapS21FromDb(r) {
   return {
@@ -156,8 +152,7 @@ function clearS21Import() {
 // 4=lesion   5=venta  6=edad(data-sortvalue YYYddd)  7=dias(hidden)  8=TSI
 // 9=exp  10=lid  11=forma  12=res  13=port  14=def  15=jug  16=lat  17=pas  18=anot  19=bp
 // 20=MN  21=MU
-var ESP_BY_NUM = {'1':'Técnico','2':'Rápido','3':'Potente','4':'Imprevisible','5':'Cabeceador'};
-
+// ESP_BY_NUM definido en constants.js: {'1':'Técnico',...,'5':'Cabezón'}
 function parseFuturiblesHTML(html) {
   var doc = new DOMParser().parseFromString(html, 'text/html');
   var players = [];
@@ -255,7 +250,6 @@ function previewS21Import() {
   msg.className = 'msg msg-ok';
   btn.style.display = 'inline-block';
 
-  // Render preview table
   var rows = parsed.slice(0, 10).map(function(j) {
     return '<tr>'
       + '<td style="white-space:nowrap"><strong>' + esc(j.nombre) + '</strong></td>'
@@ -312,7 +306,6 @@ async function confirmarS21Import() {
     return;
   }
 
-  // 3. Recargar tabla
   btn.disabled = false;
   btn.textContent = '💾 Importar y reemplazar';
   btn.style.display = 'none';

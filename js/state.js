@@ -6,3 +6,7 @@ var currentModalId = null;
 var editingId      = null;
 var updatingHt     = false;
 
+// ── Estado Sub-21 ────────────────────────────────────────────────
+var futuriblesS21       = [];
+var futuriblesS21Parsed = null;
+
