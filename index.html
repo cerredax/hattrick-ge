@@ -258,15 +258,63 @@ Especialidad Cabeceador
 
   <!-- ═══ TAB FUTURIBLES SUB-21 ════════════════════════════════ -->
   <div class="tab-content" id="tab-futuribles-sub21">
-    <div class="coming-soon">
-      <div class="cs-icon">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="20" cy="20" r="17"/>
-          <path d="M20 12v9l5 3"/>
-        </svg>
+
+    <!-- Barra superior -->
+    <div class="toolbar">
+      <span class="counter" id="s21-counter">—</span>
+      <span id="s21-last-update" style="color:var(--muted);font-size:11px;margin-left:8px"></span>
+      <button class="btn-add-player" onclick="toggleS21Import()" style="margin-left:12px">↓ Importar lista</button>
+      <button class="btn-reload" onclick="cargarFuturiblesS21()">↻ Recargar</button>
+    </div>
+
+    <!-- Panel de importación (colapsable) -->
+    <div id="s21ImportPanel" style="display:none;background:var(--card);border-bottom:1px solid var(--border);padding:16px 20px">
+      <div class="import-panel">
+        <div class="import-left">
+          <h2 style="margin:0 0 6px">Importar desde Hattrick</h2>
+          <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">Pega el HTML completo de la página Sub-21 de Hattrick (<code>NTPlayers.aspx</code>). <strong>Se borrarán todos los datos actuales</strong> y se cargarán los nuevos.</p>
+          <textarea id="s21HtmlInput" placeholder="Ctrl+U en la página de Hattrick, Ctrl+A, Ctrl+C → pega aquí el HTML completo..." style="height:140px;font-family:monospace;font-size:11px"></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="previewS21Import()">🔍 Vista previa</button>
+            <button class="btn btn-success" id="s21BtnConfirm" onclick="confirmarS21Import()" style="display:none">💾 Importar y reemplazar</button>
+            <button class="btn btn-clear" onclick="clearS21Import()">✖ Limpiar</button>
+          </div>
+          <div class="msg" id="s21MsgImport" style="margin-top:8px"></div>
+        </div>
+        <div class="import-right" id="s21ImportRight">
+          <div style="color:var(--muted);padding-top:60px;text-align:center;font-size:13px">La vista previa aparecerá aquí</div>
+        </div>
       </div>
-      <div class="cs-title">Próximamente</div>
-      <div class="cs-desc">La importación de futuribles Sub-21 está en desarrollo.<br>Pronto podrás importar la lista directamente desde Foxtrick.</div>
+    </div>
+
+    <!-- Tabla de futuribles Sub-21 -->
+    <div class="table-wrap">
+      <table id="s21-tabla">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Esp</th>
+            <th>Port</th>
+            <th>Def</th>
+            <th>Jug</th>
+            <th>Lat</th>
+            <th>Pas</th>
+            <th>Anot</th>
+            <th>BP</th>
+            <th>TSI</th>
+            <th>Forma</th>
+            <th>Res.</th>
+            <th>Años</th>
+            <th>Días</th>
+            <th>Lid.</th>
+            <th>Exp.</th>
+            <th>MN</th>
+            <th>MU21</th>
+            <th>Club</th>
+          </tr>
+        </thead>
+        <tbody id="s21-tbody"></tbody>
+      </table>
     </div>
   </div>
 
@@ -510,6 +558,7 @@ Especialidad Cabeceador
 <script src="js/importar.js"></script>
 <script src="js/exportar.js"></script>
 <script src="js/hattrick-update.js"></script>
+<script src="js/futuribles-sub21.js"></script>
 </body>
 </html>
 

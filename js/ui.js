@@ -96,6 +96,9 @@ function switchTab(name) {
   document.querySelectorAll('.tab-content').forEach(function(c) {
     c.classList.toggle('active', c.id === 'tab-' + name);
   });
+  if (name === 'futuribles-sub21' && futuriblesS21.length === 0) {
+    cargarFuturiblesS21();
+  }
 }
 
 // ── Filtros ──────────────────────────────────────────────────────
