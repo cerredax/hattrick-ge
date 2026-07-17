@@ -23,6 +23,15 @@ function renderTabla() {
       }
       return 0;
     });
+  } else {
+    list.sort(function(a, b) {
+      var av = a.anos === '' ? -Infinity : +a.anos;
+      var bv = b.anos === '' ? -Infinity : +b.anos;
+      if (bv !== av) return bv - av;
+      var ad = a.dias === '' ? -Infinity : +a.dias;
+      var bd = b.dias === '' ? -Infinity : +b.dias;
+      return bd - ad;
+    });
   }
 
   var total = jugadores.length;
